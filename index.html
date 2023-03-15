@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Tic-Tac-Toe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="titlescreen" class="titlescreen hidden">
+    <h1 class="title">TIC-TAC-TOE</h1>
+    <div class="start-menu">
+      <div class="selector-div">
+        <button class="selector user" id="x-selector">
+          <img src="./svg/user.svg"/>
+        </button>
+        <p class="player-name">USER</p>
+        <img class="token" src="./svg/x.svg" />
+      </div>
+      <div class="middle-divider">
+        <h1 class="versus">VS</h1>
+        <button id="start-button" class="start-button">START</button>
+      </div>
+      <div class="selector-div">
+        <button class="selector easy" id="o-selector">
+          <img src="./svg/easy.svg"/>
+        </button>
+        <p class="player-name">AI - EASY</p>
+        <img class="token" src="./svg/o.svg"/>
+      </div>
+    </div>
+  </div>
+  <div id="gamescreen" class="gamescreen">
+    <h1 class="round">ROUND 1</h1>
+    <div class="gameboard">
+      <div class="player-bar">
+        <div class="player-profile user">
+          <img src="./svg/user.svg"/>
+        </div>
+        <p class="player-name-sm">USER</p>
+        <img class="token-sm" src="./svg/x.svg" />
+        <div class="win-counter">0</div>
+      </div>
+      <div id="grid" class="grid">
+        <div class="grid-cell tl" data-cell="0"></div>
+        <div class="grid-cell" data-cell="1"></div>
+        <div class="grid-cell tr" data-cell="2"></div>
+        <div class="grid-cell" data-cell="3"></div>
+        <div class="grid-cell" data-cell="4"></div>
+        <div class="grid-cell" data-cell="5"></div>
+        <div class="grid-cell bl" data-cell="6"></div>
+        <div class="grid-cell" data-cell="7"></div>
+        <div class="grid-cell br" data-cell="8"></div>
+      </div>
+      <div class="player-bar">
+        <div class="player-profile easy">
+          <img src="./svg/easy.svg"/>
+        </div>
+        <p class="player-name-sm">AI-EASY</p>
+        <img class="token-sm" src="./svg/o.svg" />
+        <div class="win-counter">0</div>
+      </div>
+    </div>
+  </div>
+  <!-- ADD FOOTER -->
+</body>
+</html>
+
