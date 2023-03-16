@@ -1,3 +1,11 @@
+:root {
+  --user: #A2D3D7;
+  --easy: #A3D7A2;
+  --medium: #D2C093;
+  --hard: #D7A2A2;
+  --impossible: #BDBDBD;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -29,6 +37,7 @@ button:hover {
   justify-content: center;
   margin: auto;
   width: fit-content;
+  height: 100%;
 }
 
 .title {
@@ -57,9 +66,14 @@ button:hover {
   aspect-ratio: 1;
   border-radius: 50%;
   border: 5px solid #333333;
+  background-color: var(--user);
 }
 
-.user {
+#o-selector {
+  background-color: var(--easy);
+}
+
+/* .user {
   background-color: #A2D3D7;
 }
 
@@ -77,7 +91,7 @@ button:hover {
 
 .impossible {
   background-color: #BDBDBD;
-}
+} */
 
 button > img {
   animation: float 2s ease-in-out infinite;
@@ -139,6 +153,7 @@ button > img {
   height: 100vh;
   gap: 30px;
   margin-top: -20px;
+  transform: translate(0px, 100vh);
 }
 
 .round {
@@ -236,6 +251,8 @@ button > img {
   display: none;
 }
 
+/* ANIMATIONS */
+
 @keyframes float {
   0%, 100% {
     transform: translate(0px, 10px);
@@ -252,4 +269,14 @@ button > img {
   50% {
     transform: translate(0px, -10px);
   }
+}
+
+.swipe-out {
+  transform: translate(0px, -100vh);
+  transition: transform 500ms ease-in;
+}
+
+.swipe-in {
+  transform: translate(0px, 0vh);
+  transition: transform 500ms ease-in;
 }

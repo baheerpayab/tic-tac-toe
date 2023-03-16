@@ -18,7 +18,7 @@
     <h1 class="title">TIC-TAC-TOE</h1>
     <div class="start-menu">
       <div class="selector-div">
-        <button class="selector user" id="x-selector"><img src="./svg/user.svg"/>
+        <button class="selector" id="x-selector" data-selected="user"><img src="./svg/user.svg"/>
         </button>
         <p class="player-name">USER</p>
         <img class="token" src="./svg/x.svg" />
@@ -28,8 +28,7 @@
         <button id="start-btn" class="start-btn">START</button>
       </div>
       <div class="selector-div">
-        <button class="selector easy" id="o-selector">
-          <img src="./svg/easy.svg"/>
+        <button class="selector" id="o-selector" data-selected="easy"><img src="./svg/easy.svg"/>
         </button>
         <p class="player-name">AI - EASY</p>
         <img class="token" src="./svg/o.svg"/>
@@ -40,7 +39,7 @@
     <h1 class="round">ROUND 1</h1>
     <div class="gameboard">
       <div class="player-bar">
-        <div class="player-profile user">
+        <div class="player-profile">
           <img class="" src="./svg/user.svg"/>
         </div>
         <p class="player-name-sm">USER</p>
@@ -59,7 +58,7 @@
         <div class="grid-cell br" data-cell="8"></div>
       </div>
       <div class="player-bar">
-        <div class="player-profile easy">
+        <div class="player-profile">
           <img src="./svg/easy.svg"/>
         </div>
         <p class="player-name-sm">AI-EASY</p>
