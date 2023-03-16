@@ -39,6 +39,7 @@ button:hover {
 .start-menu {
   display: flex;
   flex-direction: row;
+  gap: 60px;
 }
 
 .selector-div {
@@ -78,6 +79,11 @@ button:hover {
   background-color: #BDBDBD;
 }
 
+button > img {
+  animation: float 2s ease-in-out infinite;
+}
+
+
 .player-name {
   font-size: 36px;
   font-weight: 300;
@@ -96,7 +102,7 @@ button:hover {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  padding: 0 60px 150px 60px;
+  margin-bottom: 150px;
 }
 
 .versus {
@@ -106,12 +112,20 @@ button:hover {
   margin: 0;
 }
 
-.start-button {
+.start-btn {
   background: none;
   border: none;
-  border-bottom: 5px solid #333333;
   font-size: 64px;
   font-weight: 300;
+  color: #333333;
+  border-radius: 25px;
+  transition: 1s;
+  padding: 0px 15px 0 15px;
+}
+
+.start-btn:hover {
+  color: #ffffff;
+  background-color: #333333;
 }
 
 /* GAME SCREEN */
@@ -123,6 +137,7 @@ button:hover {
   justify-content: center;
   height: 100vh;
   gap: 30px;
+  margin-top: -20px;
 }
 
 .round {
@@ -154,10 +169,13 @@ button:hover {
   border: 5px solid #333333;
   border-radius: 50px;
   background-color: white;
+  transition: scale 500ms;
 }
 
 .grid-cell:hover {
   cursor: pointer;
+  scale: 1.05;
+  background-color: #BDBDBD;
 }
 
 .player-bar {
@@ -195,13 +213,20 @@ button:hover {
   height: 70px;
   aspect-ratio: 1;
   border-radius: 50%;
-  border: none;
+  border: 3px solid #333333;
   margin-top: 30px;
   background-color: white;
-  box-shadow: 0px 0px 20px #333333;
 
   font-size: 36px;
   font-weight: 500;
+}
+
+.current-turn-img {
+  animation: small-float 2s ease-in-out infinite;
+}
+
+.current-turn-div {
+  box-shadow: 0px 0px 20px #333333;
 }
 
 /* ACTIVE CLASS */
@@ -210,3 +235,20 @@ button:hover {
   display: none;
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translate(0px, 10px);
+  }
+  50% {
+    transform: translate(0px, -20px);
+  }
+}
+
+@keyframes small-float {
+  0%, 100% {
+    transform: translate(0px, 5px);
+  }
+  50% {
+    transform: translate(0px, -10px);
+  }
+}
