@@ -14,12 +14,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="titlescreen" class="titlescreen hidden">
+  <div id="titlescreen" class="titlescreen">
     <h1 class="title">TIC-TAC-TOE</h1>
     <div class="start-menu">
       <div class="selector-div">
-        <button class="selector user" id="x-selector">
-          <img src="./svg/user.svg"/>
+        <button class="selector user" id="x-selector"><img src="./svg/user.svg"/>
         </button>
         <p class="player-name">USER</p>
         <img class="token" src="./svg/x.svg" />
@@ -37,7 +36,7 @@
       </div>
     </div>
   </div>
-  <div id="gamescreen" class="gamescreen">
+  <div id="gamescreen" class="gamescreen hidden">
     <h1 class="round">ROUND 1</h1>
     <div class="gameboard">
       <div class="player-bar">
@@ -70,6 +69,7 @@
     </div>
   </div>
   <!-- ADD FOOTER -->
+  <script src="index.js"></script>
 </body>
 </html>
 
