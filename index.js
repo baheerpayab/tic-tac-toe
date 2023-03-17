@@ -1,4 +1,6 @@
 /* eslint padded-blocks: ["error", { "blocks": "always" }] */
+/* eslint no-use-before-define: ["error", { "functions": false }] */
+/* eslint no-use-before-define: ["error", { "variables": false }] */
 
 const runTitlescreen = (() => {
 
@@ -68,7 +70,7 @@ const runTitlescreen = (() => {
 
   }
 
-  function startGame() {
+  const startGame = () => {
 
     function titleToGameTransition() {
 
@@ -93,10 +95,139 @@ const runTitlescreen = (() => {
 
     });
 
-  }
+  };
+
+  const getSelected = () => {
+
+    const xSelector = document.getElementById('x-selector');
+    const oSelector = document.getElementById('o-selector');
+
+  };
 
   startGame();
   playerSelector();
+
+  return {
+
+    getSelected,
+
+  };
+
+})();
+
+const Player = (playerName, playerSign) => {
+
+  let name = playerName;
+
+  let turn = false;
+
+  const getSign = () => playerSign;
+
+  const updateName = (newName) => {
+
+    name = newName;
+
+  };
+
+  return {
+
+    turn,
+    getSign,
+    updateName,
+
+  };
+
+};
+
+const ai = () => {
+
+};
+
+const gameboard = (() => {
+
+  const gameArray = Array(9).fill(null);
+  let roundCount = 0;
+
+  const playerX = Player('user', 'X');
+  const playerO = Player('easy', 'O');
+
+  const updateRound = () => {
+
+    roundCount += 1;
+
+  };
+
+  const checkTurn = () => {
+
+  };
+
+  const currentPlayer = () => (playerX.turn === false ? playerX : playerO);
+
+  const makeMove = (e) => {
+
+    if (e.target.id === 'grid') {
+
+      return;
+
+    }
+
+    const cell = e.target;
+    const i = cell.dataset.cell;
+
+    gameArray[i] = currentPlayer().getSign();
+    gameDisplay.drawSign(i, currentPlayer().getSign());
+
+  };
+
+  return {
+
+    makeMove,
+    currentPlayer,
+
+  };
+
+})();
+
+const gameDisplay = (() => {
+
+  const grid = document.getElementById('grid');
+  const xIcon = () => {
+
+    const img = document.createElement('img');
+    img.src = './svg/x.svg';
+    img.classList.add('game-x');
+
+    return img;
+
+  };
+
+  const bind = () => {
+
+    grid.addEventListener('click', gameboard.makeMove);
+
+  };
+
+  const unbind = () => {
+
+    grid.removeEventListener('click', gameboard.makeMove);
+
+  };
+
+  const drawSign = (i, sign) => {
+
+    const gridCells = Array.from(document.getElementsByClassName('grid-cell'));
+    console.log(gridCells[i]);
+    gridCells[i].appendChild(xIcon());
+
+  };
+
+  bind();
+
+  return {
+
+    drawSign,
+
+  }
 
 })();
 

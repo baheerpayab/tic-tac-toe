@@ -182,6 +182,9 @@ button > img {
 }
 
 .grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 5px solid #333333;
   border-radius: 50px;
   background-color: white;
@@ -193,6 +196,11 @@ button > img {
   scale: 1.05;
   background-color: #BDBDBD;
 }
+
+.game-x {
+  width: 70px;
+}
+
 
 .player-bar {
   display: flex;
