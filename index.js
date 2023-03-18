@@ -261,7 +261,7 @@ const gameDisplay = (() => {
 
     const img = document.createElement('img');
     img.src = (sign === 'X' ? './svg/x.svg' : './svg/o.svg');
-    img.classList.add('game-token');
+    img.classList.add('cell-sign');
 
     return img;
 
