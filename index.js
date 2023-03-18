@@ -121,6 +121,8 @@ const Player = (playerName, playerSign) => {
 
   let turn = false;
 
+  let wins = 0;
+
   const getSign = () => playerSign;
 
   const updateName = (newName) => {
@@ -129,11 +131,22 @@ const Player = (playerName, playerSign) => {
 
   };
 
+  const addWin = () => {
+
+    wins += 1;
+
+  };
+
+  const getWins = () => wins;
+
   return {
 
     turn,
     getSign,
     updateName,
+    wins,
+    addWin,
+    getWins,
 
   };
 
@@ -154,6 +167,23 @@ const gameboard = (() => {
   const updateRound = () => {
 
     roundCount += 1;
+
+  };
+
+  const updateWins = (winner) => {
+
+    if (winner === 'O') {
+
+      playerO.addWin();
+      gameDisplay.updateWins('O', playerO.getWins());
+
+    }
+    if (winner === 'X') {
+
+      playerX.addWin();
+      gameDisplay.updateWins('X', playerX.getWins());
+
+    }
 
   };
 
@@ -195,7 +225,7 @@ const gameboard = (() => {
 
   };
 
-  const checkWin = () => {
+  const checkWinOrTie = () => {
 
     const winPatterns = [
       [0, 1, 2],
@@ -225,21 +255,38 @@ const gameboard = (() => {
 
     };
 
+    const checkTie = () => {
+
+      if (!gameArray.includes(null) && checkForWinner() === false) {
+
+        return 'tie';
+
+      }
+
+      return false;
+
+    };
+
     if (checkForWinner() !== false) {
 
-      endGame();
+      endRound(checkForWinner());
+      return checkForWinner();
+
+    }
+
+    if (checkTie() === 'tie') {
+
+      endRound('tie');
+      return checkTie();
 
     }
 
   };
 
-  const checkTie = () => {
+  const endRound = (result) => {
 
-  };
-
-  const endGame = () => {
-
-    console.log('game over');
+    console.log('round over');
+    updateWins(result);
 
   };
 
@@ -248,7 +295,7 @@ const gameboard = (() => {
     makeMove,
     currentPlayer,
     changeTurn,
-    checkWin,
+    checkWinOrTie,
 
   };
 
@@ -282,12 +329,22 @@ const gameDisplay = (() => {
   const drawSign = (i, sign) => {
 
     const gridCells = Array.from(document.getElementsByClassName('grid-cell'));
-    console.log(gridCells);
-    console.log(i);
-    console.log(gridCells[i]);
+    // console.log(gridCells);
+    // console.log(i);
+    // console.log(gridCells[i]);
     gridCells[i].appendChild(signImg(sign));
 
-    gameboard.checkWin();
+    gameboard.checkWinOrTie();
+
+  };
+
+  const updateWins = (winner, winCount) => {
+
+    const xWins = document.getElementById('x-wins');
+    const oWins = document.getElementById('o-wins');
+
+    if (winner === 'X') xWins.textContent = winCount;
+    if (winner === 'O') oWins.textContent = winCount;
 
   };
 
@@ -296,6 +353,7 @@ const gameDisplay = (() => {
   return {
 
     drawSign,
+    updateWins,
 
   };
 
