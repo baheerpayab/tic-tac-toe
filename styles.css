@@ -134,13 +134,14 @@ button > img {
   font-weight: 300;
   color: #333333;
   border-radius: 25px;
-  transition: 1s;
-  padding: 0px 15px 0 15px;
+  transition: 0.5s;
+  padding: 0px 15px 5px 15px;
 }
 
 .start-btn:hover {
   color: #ffffff;
   background-color: #333333;
+  scale: 1.05;
 }
 
 /* GAME SCREEN */
@@ -197,7 +198,7 @@ button > img {
   background-color: #BDBDBD;
 }
 
-.game-x {
+.cell-sign {
   width: 70px;
 }
 

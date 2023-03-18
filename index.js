@@ -157,15 +157,29 @@ const gameboard = (() => {
 
   };
 
-  const checkTurn = () => {
+  const changeTurn = () => {
+
+    if (playerX.turn === true) {
+
+      playerX.turn = false;
+      playerO.turn = true;
+
+    } else {
+
+      playerO.turn = false;
+      playerX.turn = true;
+
+    }
 
   };
 
-  const currentPlayer = () => (playerX.turn === false ? playerX : playerO);
+  const currentPlayer = () => (playerX.turn === true ? playerX : playerO);
 
   const makeMove = (e) => {
 
-    if (e.target.id === 'grid') {
+    if (e.target.id === 'grid'
+    || e.target.hasChildNodes()
+    || !e.target.classList.contains('grid-cell')) {
 
       return;
 
@@ -177,12 +191,64 @@ const gameboard = (() => {
     gameArray[i] = currentPlayer().getSign();
     gameDisplay.drawSign(i, currentPlayer().getSign());
 
+    changeTurn();
+
+  };
+
+  const checkWin = () => {
+
+    const winPatterns = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    const isX = (currentValue) => currentValue === 'X';
+    const isO = (currentValue) => currentValue === 'O';
+
+    const currentCombos = winPatterns.map((e) => e.map((x) => gameArray[x]));
+
+    const Xwin = currentCombos.map((e) => e.every(isX));
+
+    const Owin = currentCombos.map((e) => e.every(isO));
+
+    const checkForWinner = () => {
+
+      if (Xwin.includes(true)) return 'X';
+      if (Owin.includes(true)) return 'O';
+      return false;
+
+    };
+
+    if (checkForWinner() !== false) {
+
+      endGame();
+
+    }
+
+  };
+
+  const checkTie = () => {
+
+  };
+
+  const endGame = () => {
+
+    console.log('game over');
+
   };
 
   return {
 
     makeMove,
     currentPlayer,
+    changeTurn,
+    checkWin,
 
   };
 
@@ -191,11 +257,11 @@ const gameboard = (() => {
 const gameDisplay = (() => {
 
   const grid = document.getElementById('grid');
-  const xIcon = () => {
+  const signImg = (sign) => {
 
     const img = document.createElement('img');
-    img.src = './svg/x.svg';
-    img.classList.add('game-x');
+    img.src = (sign === 'X' ? './svg/x.svg' : './svg/o.svg');
+    img.classList.add('game-token');
 
     return img;
 
@@ -216,8 +282,12 @@ const gameDisplay = (() => {
   const drawSign = (i, sign) => {
 
     const gridCells = Array.from(document.getElementsByClassName('grid-cell'));
+    console.log(gridCells);
+    console.log(i);
     console.log(gridCells[i]);
-    gridCells[i].appendChild(xIcon());
+    gridCells[i].appendChild(signImg(sign));
+
+    gameboard.checkWin();
 
   };
 
@@ -227,7 +297,7 @@ const gameDisplay = (() => {
 
     drawSign,
 
-  }
+  };
 
 })();
 
