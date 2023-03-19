@@ -16,6 +16,7 @@ body {
   background-image: url(./svg/background.svg);
   color: #333333;
   width: 100%;
+  height: 100%;
   overflow: hidden;
   margin: auto;
 }
@@ -133,9 +134,9 @@ button > img {
   font-size: 64px;
   font-weight: 300;
   color: #333333;
-  border-radius: 25px;
+  border-radius: 50px;
   transition: 0.5s;
-  padding: 0px 15px 5px 15px;
+  padding: 0px 25px 5px 25px;
 }
 
 .start-btn:hover {
@@ -254,6 +255,115 @@ button > img {
   box-shadow: 0px 0px 20px #333333;
 }
 
+/* WINNER MODAL */
+
+.overlay {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(51, 51, 51, 50%);
+  z-index: 2;
+
+}
+
+.win-modal {
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 300px;
+  height: 420px;
+  padding-top: 30px;
+  background-color: white;
+  border: 5px solid #333333;
+  border-radius: 50px;
+  z-index: 3;
+
+}
+
+.winner-txt {
+
+  text-align: center;
+  font-size: 28px;
+  font-weight: 500;
+  margin: 30px 20px 0 20px;
+  white-space: pre-line;
+  line-height: 28px;
+
+}
+
+.return-btn {
+
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 30px;
+  width: fit-content;
+  border: none;
+  background: none;
+  border-radius: 25px;
+  color: #333333;
+  font-size: 24px;
+  font-weight: 300;
+  transition: 0.5s;
+  padding: 5px 15px 5px 15px;
+
+}
+
+.return-btn:hover {
+
+  color: #ffffff;
+  background-color: #333333;
+  scale: 1.05;
+
+}
+
+/* FOOTER */
+
+#reficon {
+  transition: rotate 1s, visibility 0s;
+}
+
+#reficon:hover {
+  transform-origin: center;
+  rotate: 360deg;
+}
+
+footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height: 30px;
+  background-color: #333333;
+}
+
+.fa-github {
+  scale: 1.5;
+  color: white;
+}
+
+.fa-github:hover {
+  transition: 0.3s;
+  scale: 1.7;
+  rotate: 360deg;
+  cursor: pointer;
+}
+
 /* ACTIVE CLASS */
 
 .hidden {
@@ -273,19 +383,59 @@ button > img {
 
 @keyframes small-float {
   0%, 100% {
-    transform: translate(0px, 5px);
+    transform: translate(0px, 0px);
   }
   50% {
     transform: translate(0px, -10px);
   }
 }
 
-.swipe-out {
-  transform: translate(0px, -100vh);
-  transition: transform 500ms ease-in;
+.slide-out-transition {
+  animation-name: slide-out;
+  animation-fill-mode: forwards;
+  animation-duration: 0.5s;
 }
 
-.swipe-in {
+.slide-in-bottom-transition {
+  animation-name: slide-in-bottom;
+  animation-fill-mode: forwards;
+  animation-duration: 0.5s;
+}
+
+.slide-in-top-transition {
+  animation-name: slide-in-top;
+  animation-fill-mode: forwards;
+  animation-duration: 0.5s;
+}
+
+.game-active {
   transform: translate(0px, 0vh);
-  transition: transform 500ms ease-in;
+}
+
+@keyframes slide-out {
+  from {
+    transform: translate(0px, 0px);
+  }
+  to {
+    transform: translate(0px, -100vh);
+  }
+  
+}
+
+@keyframes slide-in-bottom {
+  from {
+    transform: translate(0px, 100vh);
+  }
+  to {
+    transform: translate(0px, 0vh);
+  }
+}
+
+@keyframes slide-in-top {
+  from {
+    transform: translate(0px, -100vh);
+  }
+  to {
+    transform: translate(0px, 0px);
+  }
 }

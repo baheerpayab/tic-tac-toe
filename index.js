@@ -9,7 +9,7 @@ const runTitlescreen = (() => {
     function switchOption(option) {
 
       const playerSelectBtn = option.currentTarget;
-      const playerIcon = playerSelectBtn.firstChild;
+      const playerIcon = playerSelectBtn.firstElementChild;
       const currentSelection = playerSelectBtn.dataset.selected;
       const playerName = playerSelectBtn.nextElementSibling;
       switch (currentSelection) {
@@ -77,53 +77,70 @@ const runTitlescreen = (() => {
       const titlescreen = document.getElementById('titlescreen');
       const gamescreen = document.getElementById('gamescreen');
 
-      titlescreen.classList.add('swipe-out');
-      gamescreen.classList.toggle('hidden');
+      titlescreen.classList.add('slide-out-transition');
+      gamescreen.classList.remove('hidden');
       setTimeout(() => {
 
-        titlescreen.classList.toggle('hidden');
-        gamescreen.classList.add('swipe-in');
+        titlescreen.classList.add('hidden');
+        titlescreen.classList.remove('slide-out-transition');
+        gamescreen.classList.add('slide-in-bottom-transition');
+        setTimeout(() => {
+
+          gamescreen.classList.add('game-active');
+          gamescreen.classList.remove('slide-in-bottom-transition');
+
+        }, 500);
 
       }, 500);
 
     }
 
-    const startBtn = document.getElementById('start-btn');
-    startBtn.addEventListener('click', () => {
+    const xSelected = document.getElementById('x-selector').dataset.selected;
+    const oSelected = document.getElementById('o-selector').dataset.selected;
 
-      titleToGameTransition();
-
-    });
-
-  };
-
-  const getSelected = () => {
-
-    const xSelector = document.getElementById('x-selector');
-    const oSelector = document.getElementById('o-selector');
+    titleToGameTransition();
+    gameboard.updatePlayers(xSelected, oSelected);
+    gameDisplay.bind();
 
   };
 
-  startGame();
+  const gameToTitleTransition = () => {
+
+    const overlay = document.getElementById('overlay');
+    const titlescreen = document.getElementById('titlescreen');
+    const gamescreen = document.getElementById('gamescreen');
+
+    overlay.classList.add('hidden');
+    titlescreen.classList.remove('hidden');
+    titlescreen.classList.add('slide-in-top-transition');
+    setTimeout(() => {
+
+      gamescreen.classList.add('hidden');
+      gamescreen.classList.remove('game-active');
+      titlescreen.classList.remove('slide-in-top-transition');
+
+    }, 500);
+
+  };
+
+  const startBtn = document.getElementById('start-btn');
+  startBtn.addEventListener('click', startGame);
+
   playerSelector();
 
   return {
-
-    getSelected,
-
+    gameToTitleTransition,
   };
 
 })();
 
-const Player = (playerName, playerSign) => {
+const Player = (playerName, playerSign, turn) => {
 
   let name = playerName;
 
-  let turn = false;
+  let isTurn = turn;
 
   let wins = 0;
-
-  const getSign = () => playerSign;
 
   const updateName = (newName) => {
 
@@ -137,16 +154,28 @@ const Player = (playerName, playerSign) => {
 
   };
 
+  const resetWins = () => {
+
+    wins = 0;
+
+  };
+
+  const getSign = () => playerSign;
+
   const getWins = () => wins;
+
+  const getName = () => name;
 
   return {
 
-    turn,
-    getSign,
-    updateName,
+    isTurn,
     wins,
+    updateName,
     addWin,
+    resetWins,
+    getSign,
     getWins,
+    getName,
 
   };
 
@@ -158,30 +187,32 @@ const ai = () => {
 
 const gameboard = (() => {
 
-  const gameArray = Array(9).fill(null);
-  let roundCount = 0;
+  let gameArray = Array(9).fill(null);
+  let roundCount = 1;
 
-  const playerX = Player('user', 'X');
-  const playerO = Player('easy', 'O');
+  const playerX = Player('user', 'X', true);
+  const playerO = Player('easy', 'O', false);
 
-  const updateRound = () => {
+  const updatePlayers = (newX, newO) => {
 
-    roundCount += 1;
+    playerX.updateName(newX);
+    playerO.updateName(newO);
+    gameDisplay.renderPlayers(playerX, playerO);
+    gameDisplay.renderPlayerTurn(playerX, playerO);
 
   };
 
   const updateWins = (winner) => {
 
-    if (winner === 'O') {
+    switch (winner) {
 
-      playerO.addWin();
-      gameDisplay.updateWins('O', playerO.getWins());
+      case 'tie':
+        return 'tie';
 
-    }
-    if (winner === 'X') {
-
-      playerX.addWin();
-      gameDisplay.updateWins('X', playerX.getWins());
+      default:
+        winner.addWin();
+        gameDisplay.renderWins(playerX, playerO);
+        return winner.getWins();
 
     }
 
@@ -189,21 +220,23 @@ const gameboard = (() => {
 
   const changeTurn = () => {
 
-    if (playerX.turn === true) {
+    if (playerX.isTurn === true) {
 
-      playerX.turn = false;
-      playerO.turn = true;
+      playerX.isTurn = false;
+      playerO.isTurn = true;
+      gameDisplay.renderPlayerTurn(playerO, playerX);
 
     } else {
 
-      playerO.turn = false;
-      playerX.turn = true;
+      playerO.isTurn = false;
+      playerX.isTurn = true;
+      gameDisplay.renderPlayerTurn(playerX, playerO);
 
     }
 
   };
 
-  const currentPlayer = () => (playerX.turn === true ? playerX : playerO);
+  const currentPlayer = () => (playerO.isTurn === true ? playerO : playerX);
 
   const makeMove = (e) => {
 
@@ -219,9 +252,11 @@ const gameboard = (() => {
     const i = cell.dataset.cell;
 
     gameArray[i] = currentPlayer().getSign();
-    gameDisplay.drawSign(i, currentPlayer().getSign());
+    console.log(playerX.isTurn);
+    gameDisplay.renderSign(i, currentPlayer().getSign());
 
     changeTurn();
+    checkWinOrTie();
 
   };
 
@@ -249,8 +284,8 @@ const gameboard = (() => {
 
     const checkForWinner = () => {
 
-      if (Xwin.includes(true)) return 'X';
-      if (Owin.includes(true)) return 'O';
+      if (Xwin.includes(true)) return playerX;
+      if (Owin.includes(true)) return playerO;
       return false;
 
     };
@@ -283,10 +318,51 @@ const gameboard = (() => {
 
   };
 
-  const endRound = (result) => {
+  const endRound = (winner) => {
 
-    console.log('round over');
-    updateWins(result);
+    if (updateWins(winner) === 3) {
+
+      endGame(winner);
+
+    } else {
+
+      console.log('round over');
+      newRound();
+
+    }
+
+  };
+
+  const newRound = () => {
+
+    roundCount += 1;
+    gameDisplay.renderRound(roundCount);
+    gameArray = Array(9).fill(null);
+    playerX.isTurn = true;
+    playerO.isTurn = false;
+    gameDisplay.renderPlayerTurn(playerX, playerO);
+
+  };
+
+  const endGame = (winner) => {
+
+    console.log('game over');
+    gameDisplay.unbind();
+    gameDisplay.renderPlayerTurn(playerX, playerO).unrender();
+    gameDisplay.renderWinModal(winner);
+
+  };
+
+  const resetGame = () => {
+
+    gameArray = Array(9).fill(null);
+    roundCount = 1;
+    gameDisplay.renderRound(roundCount);
+    playerX.isTurn = true;
+    playerO.isTurn = false;
+    playerX.resetWins();
+    playerO.resetWins();
+    gameDisplay.renderWins(playerX, playerO);
 
   };
 
@@ -296,6 +372,8 @@ const gameboard = (() => {
     currentPlayer,
     changeTurn,
     checkWinOrTie,
+    updatePlayers,
+    resetGame,
 
   };
 
@@ -304,6 +382,8 @@ const gameboard = (() => {
 const gameDisplay = (() => {
 
   const grid = document.getElementById('grid');
+  const gridCells = Array.from(document.getElementsByClassName('grid-cell'));
+
   const signImg = (sign) => {
 
     const img = document.createElement('img');
@@ -326,34 +406,172 @@ const gameDisplay = (() => {
 
   };
 
-  const drawSign = (i, sign) => {
+  const renderPlayerTurn = (current, waiting) => {
 
-    const gridCells = Array.from(document.getElementsByClassName('grid-cell'));
+    const currentPlayer = document.getElementById(`player-profile-${current.getSign().toLowerCase()}`);
+    const waitingPlayer = document.getElementById(`player-profile-${waiting.getSign().toLowerCase()}`);
+    console.log(current.isTurn);
+
+    currentPlayer.firstElementChild.style.animation = 'small-float 2s ease-in-out infinite';
+    currentPlayer.style.boxShadow = '0px 0px 20px #333333';
+    waitingPlayer.firstElementChild.style.animation = '';
+    waitingPlayer.style.boxShadow = '';
+
+    const unrender = () => {
+
+      currentPlayer.firstElementChild.style.animation = '';
+      currentPlayer.style.boxShadow = '';
+      waitingPlayer.firstElementChild.style.animation = '';
+      waitingPlayer.style.boxShadow = '';
+
+    };
+
+    return {
+      unrender,
+    };
+
+  };
+
+  const renderSign = (i, sign) => {
+
     // console.log(gridCells);
     // console.log(i);
     // console.log(gridCells[i]);
     gridCells[i].appendChild(signImg(sign));
 
-    gameboard.checkWinOrTie();
-
   };
 
-  const updateWins = (winner, winCount) => {
+  const renderWins = (playerX, playerO) => {
 
     const xWins = document.getElementById('x-wins');
     const oWins = document.getElementById('o-wins');
 
-    if (winner === 'X') xWins.textContent = winCount;
-    if (winner === 'O') oWins.textContent = winCount;
+    xWins.textContent = playerX.getWins();
+    oWins.textContent = playerO.getWins();
 
   };
 
-  bind();
+  const renderPlayers = (playerX, playerO) => {
+
+    const renderPlayer = (player) => {
+
+      const playerProfile = document.getElementById(`player-profile-${player.getSign().toLowerCase()}`);
+      playerProfile.firstElementChild.src = `./svg/${player.getName()}.svg`;
+      playerProfile.style.backgroundColor = `var(--${player.getName()})`;
+      const playerName = playerProfile.nextElementSibling;
+      switch (player.getName()) {
+
+        case 'user':
+          playerName.textContent = 'USER';
+          break;
+
+        case 'easy':
+          playerName.textContent = 'AI - EASY';
+          break;
+
+        case 'medium':
+          playerName.textContent = 'AI - MEDIUM';
+          break;
+
+        case 'hard':
+          playerName.textContent = 'AI - HARD';
+          break;
+
+        case 'impossible':
+          playerName.textContent = 'AI - IMPOSSIBLE';
+          break;
+
+        default:
+          break;
+
+      }
+
+    };
+
+    renderPlayer(playerX);
+    renderPlayer(playerO);
+
+  };
+
+  const renderRound = (roundCount) => {
+
+    const roundTitle = document.getElementById('round');
+    roundTitle.textContent = `ROUND ${roundCount}`;
+    gridCells.forEach((e) => {
+
+      e.innerHTML = '';
+
+    });
+
+  };
+
+  const renderWinModal = (winner) => {
+
+    const overlay = document.getElementById('overlay');
+    const returnBtn = document.getElementById('return-btn');
+    const winModal = document.getElementById('win-modal');
+    const winnerProfile = document.getElementById('winner-profile');
+
+    winnerProfile.style.backgroundColor = `var(--${winner.getName()})`;
+    winnerProfile.firstChild.src = `./svg/${winner.getName()}.svg`;
+    winnerProfile.firstChild.style.animation = 'small-float 2s ease-in-out infinite';
+
+    const setWinnerTxt = () => {
+
+      const winnerTxt = document.getElementById('winner-txt');
+
+      switch (winner.getName()) {
+
+        case 'user':
+          winnerTxt.textContent = `USER \n(${winner.getSign()}) WINS!`;
+          break;
+
+        case 'easy':
+          winnerTxt.textContent = `AI - EASY \n(${winner.getSign()}) WINS!`;
+          break;
+
+        case 'medium':
+          winnerTxt.textContent = `AI - MEDIUM \n(${winner.getSign()}) WINS!`;
+          break;
+
+        case 'hard':
+          winnerTxt.textContent = `AI - HARD \n(${winner.getSign()}) WINS!`;
+          break;
+
+        case 'impossible':
+          winnerTxt.textContent = `AI - IMPOSSIBLE \n(${winner.getSign()}) WINS!`;
+          break;
+
+        default:
+          break;
+
+      }
+
+    };
+
+    const resetAndReturn = () => {
+
+      runTitlescreen.gameToTitleTransition();
+      gameboard.resetGame();
+
+    };
+
+    setWinnerTxt();
+    overlay.classList.remove('hidden');
+    returnBtn.addEventListener('click', resetAndReturn);
+
+  };
 
   return {
 
-    drawSign,
-    updateWins,
+    bind,
+    renderPlayerTurn,
+    renderSign,
+    renderWins,
+    renderPlayers,
+    renderRound,
+    unbind,
+    renderWinModal,
 
   };
 
