@@ -100,7 +100,7 @@ const runTitlescreen = (() => {
 
     titleToGameTransition();
     gameboard.updatePlayers(xSelected, oSelected);
-    gameDisplay.bind();
+    gameboard.isCurrentPlayerAi();
 
   };
 
@@ -142,6 +142,8 @@ const Player = (playerName, playerSign, turn) => {
 
   let wins = 0;
 
+  let movesMade = 0;
+
   const updateName = (newName) => {
 
     name = newName;
@@ -154,15 +156,29 @@ const Player = (playerName, playerSign, turn) => {
 
   };
 
+  const addMove = () => {
+
+    movesMade += 1;
+
+  };
+
   const resetWins = () => {
 
     wins = 0;
 
   };
 
+  const resetMoves = () => {
+
+    movesMade = 0;
+
+  }
+
   const getSign = () => playerSign;
 
   const getWins = () => wins;
+
+  const getMoves = () => movesMade;
 
   const getName = () => name;
 
@@ -176,14 +192,225 @@ const Player = (playerName, playerSign, turn) => {
     getSign,
     getWins,
     getName,
+    movesMade,
+    addMove,
+    getMoves,
+    resetMoves,
 
   };
 
 };
 
-const ai = () => {
+const aiPlayer = (() => {
 
-};
+  const findBestMove = (ai, gameArray) => {
+
+    const mySign = ai.getSign();
+    const enemySign = mySign === 'X' ? 'O' : 'X';
+    console.log(enemySign);
+    console.log(ai.getMoves());
+
+    const winPatterns = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    const currentCombos = winPatterns.map((e) => e.map((x) => gameArray[x]));
+
+    const getBlockMove = () => {
+
+      const blockWinCombo = currentCombos.filter((e) => (
+        (e[0] === e[1]) && (e[2] === null) && (e[0] === enemySign))
+      || ((e[1] === e[2]) && (e[0] === null) && (e[1] === enemySign))
+      || ((e[0] === e[2]) && (e[1] === null) && (e[2] === enemySign)));
+
+      const blockWinComboIndex = function indexOfArray(val, array) {
+
+        const hash = {};
+        for (let i = 0; i < array.length; i += 1) {
+
+          hash[array[i]] = i;
+
+        }
+        return (hash.hasOwnProperty(val)) ? hash[val] : -1;
+
+      };
+
+      const missingMoveIndex = (array) => {
+
+        if (array.length !== 0) {
+
+          const newArray = array[0];
+          console.log(newArray);
+          return newArray.indexOf(null);
+
+        }
+
+        return false;
+
+      };
+
+      const blockWin = () => {
+
+        const blockWinPattern = blockWinComboIndex(blockWinCombo, currentCombos);
+        console.log(blockWinPattern);
+        const missingBlockMove = missingMoveIndex(blockWinCombo);
+        console.log(missingBlockMove);
+
+        if (missingBlockMove !== false) {
+
+          return winPatterns[blockWinPattern][missingBlockMove];
+
+        }
+
+        return false;
+
+      };
+
+      return blockWin();
+
+    };
+
+    const getWinMove = () => {
+
+      const winCombo = currentCombos.filter((e) => (
+        (e[0] === e[1]) && (e[2] === null) && (e[0] === mySign))
+      || ((e[1] === e[2]) && (e[0] === null) && (e[1] === mySign))
+      || ((e[0] === e[2]) && (e[1] === null) && (e[2] === mySign)));
+
+      const winComboIndex = function indexOfArray(val, array) {
+
+        const hash = {};
+        for (let i = 0; i < array.length; i += 1) {
+
+          hash[array[i]] = i;
+
+        }
+        return (hash.hasOwnProperty(val)) ? hash[val] : -1;
+
+      };
+
+      const missingMoveIndex = (array) => {
+
+        if (array.length !== 0) {
+
+          const newArray = array[0];
+          console.log(newArray);
+          return newArray.indexOf(null);
+
+        }
+
+        return false;
+
+      };
+
+      const getWin = () => {
+
+        const getWinPattern = winComboIndex(winCombo, currentCombos);
+        console.log(getWinPattern);
+        const missingWinMove = missingMoveIndex(winCombo);
+        console.log(missingWinMove);
+
+        if (missingWinMove !== false) {
+
+          return winPatterns[getWinPattern][missingWinMove];
+
+        }
+
+        return false;
+
+      };
+
+      return getWin();
+
+    };
+
+    if ((getBlockMove() !== false) && (getWinMove() !== false)) {
+
+      return getWinMove();
+
+    }
+
+    if (getBlockMove() !== false) {
+
+      return getBlockMove();
+
+    }
+
+    if (gameArray[4] === enemySign) {
+
+      const corners = [0, 2, 6, 8];
+      return corners[Math.floor(Math.random() * corners.length)];
+
+    }
+
+    if (((gameArray[0] || gameArray[2]
+      || gameArray[6] || gameArray[8]) === enemySign || mySign)
+      && ai.getMoves() === 0) {
+
+      console.log('center is the best move');
+      return 4;
+
+    }
+
+    if (((gameArray[1] || gameArray[3]
+      || gameArray[5] || gameArray[7]) === enemySign)
+      && ai.getMoves === 0) {
+
+      console.log('random move is the best move');
+      return getRandomMove();
+
+    }
+
+
+    if (ai.getMoves() > 0) {
+
+      return getRandomMove(gameArray);
+
+    }
+
+    if (((gameArray[1] || gameArray[3]
+      || gameArray[5] || gameArray[7]) === null)
+      && ai.getMoves === 0) {
+
+      const corners = [0, 2, 6, 8];
+      return corners[Math.floor(Math.random() * corners.length)];
+
+    }
+
+  };
+
+  const getRandomMove = (gameArray) => {
+
+    const emptyCells = [];
+    for (let i = 0; i < gameArray.length; i += 1) {
+
+      if (gameArray[i] === null) {
+
+        emptyCells.push(i);
+
+      }
+
+    }
+
+    return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+
+  };
+
+  return {
+
+    findBestMove,
+    getRandomMove,
+
+  };
+
+})();
 
 const gameboard = (() => {
 
@@ -225,18 +452,37 @@ const gameboard = (() => {
       playerX.isTurn = false;
       playerO.isTurn = true;
       gameDisplay.renderPlayerTurn(playerO, playerX);
+      isCurrentPlayerAi();
 
     } else {
 
       playerO.isTurn = false;
       playerX.isTurn = true;
       gameDisplay.renderPlayerTurn(playerX, playerO);
+      isCurrentPlayerAi();
 
     }
 
   };
 
   const currentPlayer = () => (playerO.isTurn === true ? playerO : playerX);
+
+  const isCurrentPlayerAi = () => {
+
+    if (currentPlayer().getName() === 'user') {
+
+      console.log('is not AI');
+      gameDisplay.bind();
+
+    } else {
+
+      console.log('is AI');
+      gameDisplay.unbind();
+      makeAiMove();
+
+    }
+
+  };
 
   const makeMove = (e) => {
 
@@ -257,6 +503,27 @@ const gameboard = (() => {
 
     changeTurn();
     checkWinOrTie();
+
+  };
+
+  const makeAiMove = () => {
+
+    console.log('ai move');
+
+    const bestMove = aiPlayer.findBestMove(currentPlayer(), gameArray);
+    const randomMove = aiPlayer.getRandomMove(gameArray);
+
+    currentPlayer().addMove();
+
+    gameArray[bestMove] = currentPlayer().getSign();
+    gameDisplay.renderSign(bestMove, currentPlayer().getSign());
+
+    setTimeout(() => {
+
+      changeTurn();
+      checkWinOrTie();
+
+    }, 2000);
 
   };
 
@@ -340,7 +607,10 @@ const gameboard = (() => {
     gameArray = Array(9).fill(null);
     playerX.isTurn = true;
     playerO.isTurn = false;
+    playerX.resetMoves();
+    playerO.resetMoves();
     gameDisplay.renderPlayerTurn(playerX, playerO);
+    isCurrentPlayerAi();
 
   };
 
@@ -370,6 +640,7 @@ const gameboard = (() => {
 
     makeMove,
     currentPlayer,
+    isCurrentPlayerAi,
     changeTurn,
     checkWinOrTie,
     updatePlayers,
@@ -576,6 +847,7 @@ const gameDisplay = (() => {
   };
 
 })();
+
 
 /* function switchOption(option) {
   const playerSelectBtn = option.currentTarget;
