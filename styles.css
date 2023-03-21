@@ -191,6 +191,7 @@ button > img {
   border-radius: 50px;
   background-color: white;
   transition: scale 500ms;
+  transition: background-color 1500ms;
 }
 
 .grid-cell:hover {

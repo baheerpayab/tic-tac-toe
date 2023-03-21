@@ -100,7 +100,7 @@ const runTitlescreen = (() => {
 
     titleToGameTransition();
     gameboard.updatePlayers(xSelected, oSelected);
-    gameboard.isCurrentPlayerAi();
+    gameboard.isCurrentPlayerAi(false);
 
   };
 
@@ -207,8 +207,8 @@ const aiPlayer = (() => {
 
     const mySign = ai.getSign();
     const enemySign = mySign === 'X' ? 'O' : 'X';
-    console.log(enemySign);
-    console.log(ai.getMoves());
+    // console.log(enemySign);
+    // console.log(ai.getMoves());
 
     const winPatterns = [
       [0, 1, 2],
@@ -242,12 +242,12 @@ const aiPlayer = (() => {
 
       };
 
-      const missingMoveIndex = (array) => {
+      const missingBlockMoveIndex = (array) => {
 
         if (array.length !== 0) {
 
           const newArray = array[0];
-          console.log(newArray);
+          // console.log(newArray);
           return newArray.indexOf(null);
 
         }
@@ -259,11 +259,11 @@ const aiPlayer = (() => {
       const blockWin = () => {
 
         const blockWinPattern = blockWinComboIndex(blockWinCombo, currentCombos);
-        console.log(blockWinPattern);
-        const missingBlockMove = missingMoveIndex(blockWinCombo);
-        console.log(missingBlockMove);
+        // console.log(blockWinPattern);
+        const missingBlockMove = missingBlockMoveIndex(blockWinCombo);
+        // console.log(missingBlockMove);
 
-        if (missingBlockMove !== false) {
+        if (missingBlockMove !== false && blockWinPattern !== -1) {
 
           return winPatterns[blockWinPattern][missingBlockMove];
 
@@ -296,12 +296,12 @@ const aiPlayer = (() => {
 
       };
 
-      const missingMoveIndex = (array) => {
+      const missingWinMoveIndex = (array) => {
 
         if (array.length !== 0) {
 
           const newArray = array[0];
-          console.log(newArray);
+          // console.log(newArray);
           return newArray.indexOf(null);
 
         }
@@ -313,11 +313,12 @@ const aiPlayer = (() => {
       const getWin = () => {
 
         const getWinPattern = winComboIndex(winCombo, currentCombos);
-        console.log(getWinPattern);
-        const missingWinMove = missingMoveIndex(winCombo);
-        console.log(missingWinMove);
+        // console.log(winCombo);
+        // console.log(getWinPattern);
+        const missingWinMove = missingWinMoveIndex(winCombo);
+        // console.log(missingWinMove);
 
-        if (missingWinMove !== false) {
+        if (missingWinMove !== false && getWinPattern !== -1) {
 
           return winPatterns[getWinPattern][missingWinMove];
 
@@ -333,28 +334,135 @@ const aiPlayer = (() => {
 
     if ((getBlockMove() !== false) && (getWinMove() !== false)) {
 
+      console.log('winning');
       return getWinMove();
 
     }
 
     if (getBlockMove() !== false) {
 
+      console.log('blocking');
       return getBlockMove();
 
     }
 
-    if (gameArray[4] === enemySign) {
+    if (getWinMove() !== false) {
 
+      console.log('winning');
+      return getWinMove();
+
+    }
+
+    if ((gameArray[4] === null)
+    && ((gameArray[0] === null) && (gameArray[2] === null)
+    && (gameArray[6] === null) && (gameArray[8] === null))
+    && (ai.getMoves() === 0)) {
+
+      console.log('cornering to win');
       const corners = [0, 2, 6, 8];
       return corners[Math.floor(Math.random() * corners.length)];
 
     }
 
+    if ((gameArray[4] === enemySign)
+    && ((gameArray[0] && gameArray[2] && gameArray[6] && gameArray[8]) === null)
+    && ai.getMoves() === 0) {
+
+      console.log('cornering');
+      const corners = [0, 2, 6, 8];
+      const move = corners[Math.floor(Math.random() * corners.length)];
+
+      if (gameArray[move] === null) {
+
+        return move;
+
+      }
+
+      console.log('trying again');
+      findBestMove(ai, gameArray);
+
+    }
+
+    if (((gameArray[1] || gameArray[3]
+      || gameArray[5] || gameArray[7]) === null)
+      && ai.getMoves === 0) {
+
+      console.log('cornering two');
+      const corners = [0, 2, 6, 8];
+      return corners[Math.floor(Math.random() * corners.length)];
+
+    }
+
+    if (((gameArray[0] && gameArray[7]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('first');
+      return 6;
+
+    }
+
+    if (((gameArray[2] && gameArray[7]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('second');
+      return 8;
+
+    }
+
+    if (((gameArray[0] && gameArray[5]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('third');
+      return 2;
+
+    }
+
+    if (((gameArray[6] && gameArray[5]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('fourth');
+      return 8;
+
+    }
+
+    if (((gameArray[6] && gameArray[1]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('fifth');
+      return 0;
+
+    }
+
+    if (((gameArray[8] && gameArray[1]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('sixth');
+      return 2;
+
+    }
+
+    if (((gameArray[8] && gameArray[3]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('seventh');
+      return 6;
+
+    }
+
+    if (((gameArray[2] && gameArray[4]) === enemySign) && ai.getMoves() === 1) {
+
+      console.log('eigth');
+      return 0;
+
+    }
+
     if (((gameArray[0] || gameArray[2]
-      || gameArray[6] || gameArray[8]) === enemySign || mySign)
+      || gameArray[6] || gameArray[8]) === enemySign)
       && ai.getMoves() === 0) {
 
-      console.log('center is the best move');
+      console.log('centering to block');
+      return 4;
+
+    }
+
+    if (((gameArray[0] || gameArray[2]
+      || gameArray[6] || gameArray[8]) === mySign)
+      && ai.getMoves() === 0) {
+
+      console.log('centering to win');
       return 4;
 
     }
@@ -363,24 +471,32 @@ const aiPlayer = (() => {
       || gameArray[5] || gameArray[7]) === enemySign)
       && ai.getMoves === 0) {
 
-      console.log('random move is the best move');
+      console.log('randoming');
       return getRandomMove();
 
     }
 
+    if ((gameArray[4] === mySign) && ai.getMoves() < 2) {
 
-    if (ai.getMoves() > 0) {
+      console.log('middling');
+      const middles = [1, 3, 5, 7];
+      const move = middles[Math.floor(Math.random() * middles.length)];
 
-      return getRandomMove(gameArray);
+      if (gameArray[move] === null) {
+
+        return move;
+
+      }
+
+      console.log('trying again');
+      findBestMove(ai, gameArray);
 
     }
 
-    if (((gameArray[1] || gameArray[3]
-      || gameArray[5] || gameArray[7]) === null)
-      && ai.getMoves === 0) {
+    if (ai.getMoves() > 0) {
 
-      const corners = [0, 2, 6, 8];
-      return corners[Math.floor(Math.random() * corners.length)];
+      console.log('randoming');
+      return getRandomMove(gameArray);
 
     }
 
@@ -420,6 +536,8 @@ const gameboard = (() => {
   const playerX = Player('user', 'X', true);
   const playerO = Player('easy', 'O', false);
 
+  let state = false;
+
   const updatePlayers = (newX, newO) => {
 
     playerX.updateName(newX);
@@ -447,19 +565,21 @@ const gameboard = (() => {
 
   const changeTurn = () => {
 
-    if (playerX.isTurn === true) {
+    if (gameArray.indexOf(null) !== -1) {
 
-      playerX.isTurn = false;
-      playerO.isTurn = true;
-      gameDisplay.renderPlayerTurn(playerO, playerX);
-      isCurrentPlayerAi();
+      if (playerX.isTurn === true) {
 
-    } else {
+        playerX.isTurn = false;
+        playerO.isTurn = true;
+        gameDisplay.renderPlayerTurn(playerO, playerX);
 
-      playerO.isTurn = false;
-      playerX.isTurn = true;
-      gameDisplay.renderPlayerTurn(playerX, playerO);
-      isCurrentPlayerAi();
+      } else {
+
+        playerO.isTurn = false;
+        playerX.isTurn = true;
+        gameDisplay.renderPlayerTurn(playerX, playerO);
+
+      }
 
     }
 
@@ -467,18 +587,22 @@ const gameboard = (() => {
 
   const currentPlayer = () => (playerO.isTurn === true ? playerO : playerX);
 
-  const isCurrentPlayerAi = () => {
+  const isCurrentPlayerAi = (pause) => {
 
     if (currentPlayer().getName() === 'user') {
 
       console.log('is not AI');
       gameDisplay.bind();
 
-    } else {
+    } else if (pause === false) {
 
       console.log('is AI');
       gameDisplay.unbind();
       makeAiMove();
+
+    } else {
+
+      return;
 
     }
 
@@ -498,11 +622,12 @@ const gameboard = (() => {
     const i = cell.dataset.cell;
 
     gameArray[i] = currentPlayer().getSign();
-    console.log(playerX.isTurn);
+    // console.log(playerX.isTurn);
     gameDisplay.renderSign(i, currentPlayer().getSign());
 
     changeTurn();
-    checkWinOrTie();
+    state = checkWinOrTie();
+    isCurrentPlayerAi(state);
 
   };
 
@@ -512,18 +637,78 @@ const gameboard = (() => {
 
     const bestMove = aiPlayer.findBestMove(currentPlayer(), gameArray);
     const randomMove = aiPlayer.getRandomMove(gameArray);
+    let chosenMove = 0;
 
     currentPlayer().addMove();
 
-    gameArray[bestMove] = currentPlayer().getSign();
-    gameDisplay.renderSign(bestMove, currentPlayer().getSign());
+    switch (currentPlayer().getName()) {
+
+      case 'easy':
+        if (Math.random() < 0.25) {
+
+          gameArray[bestMove] = currentPlayer().getSign();
+          chosenMove = bestMove;
+
+        } else {
+
+          gameArray[randomMove] = currentPlayer().getSign();
+          chosenMove = randomMove;
+
+        }
+        break;
+
+      case 'medium':
+        if (Math.random() < 0.65) {
+
+          gameArray[bestMove] = currentPlayer().getSign();
+          chosenMove = bestMove;
+
+        } else {
+
+          gameArray[randomMove] = currentPlayer().getSign();
+          chosenMove = randomMove;
+
+        }
+        break;
+
+      case 'hard':
+        if (Math.random() < 0.90) {
+
+          gameArray[bestMove] = currentPlayer().getSign();
+          chosenMove = bestMove;
+
+        } else {
+
+          gameArray[randomMove] = currentPlayer().getSign();
+          chosenMove = randomMove;
+
+        }
+        break;
+
+      case 'impossible':
+        gameArray[bestMove] = currentPlayer().getSign();
+        chosenMove = bestMove;
+        break;
+
+      default:
+        if (Math.random() < 0.25 / 100) gameArray[bestMove] = currentPlayer().getSign();
+
+    }
 
     setTimeout(() => {
 
-      changeTurn();
-      checkWinOrTie();
+      gameDisplay.renderSign(chosenMove, currentPlayer().getSign());
 
-    }, 2000);
+    }, 500);
+
+    const time = (playerX && playerO) !== 'user' ? 1000 : 0;
+    setTimeout(() => {
+
+      changeTurn();
+      state = checkWinOrTie();
+      isCurrentPlayerAi(state);
+
+    }, time);
 
   };
 
@@ -549,6 +734,24 @@ const gameboard = (() => {
 
     const Owin = currentCombos.map((e) => e.every(isO));
 
+    // const winningCombo = currentCombos.filter((e) => ((e[0] === e[1]) && (e[1] === e[2])));
+
+    // const winningComboIndex = function indexOfArray(val, array) {
+
+    //   const hash = {};
+    //   for (let i = 0; i < array.length; i += 1) {
+
+    //     hash[array[i]] = i;
+
+    //   }
+    //   return (hash.hasOwnProperty(val)) ? hash[val] : -1;
+
+    // };
+
+    // console.log(winningComboIndex(winningCombo, currentCombos));
+
+    // const winningComboCells = winPatterns[winningComboIndex(winningCombo, currentCombos)];
+
     const checkForWinner = () => {
 
       if (Xwin.includes(true)) return playerX;
@@ -571,6 +774,7 @@ const gameboard = (() => {
 
     if (checkForWinner() !== false) {
 
+      gameDisplay.highlightWin(checkForWinner());
       endRound(checkForWinner());
       return checkForWinner();
 
@@ -578,10 +782,13 @@ const gameboard = (() => {
 
     if (checkTie() === 'tie') {
 
+      gameDisplay.highlightTie();
       endRound('tie');
       return checkTie();
 
     }
+
+    return false;
 
   };
 
@@ -593,8 +800,11 @@ const gameboard = (() => {
 
     } else {
 
-      console.log('round over');
-      newRound();
+      setTimeout(() => {
+
+        newRound();
+
+      }, 1000);
 
     }
 
@@ -610,7 +820,8 @@ const gameboard = (() => {
     playerX.resetMoves();
     playerO.resetMoves();
     gameDisplay.renderPlayerTurn(playerX, playerO);
-    isCurrentPlayerAi();
+    state = false;
+    isCurrentPlayerAi(state);
 
   };
 
@@ -660,6 +871,7 @@ const gameDisplay = (() => {
     const img = document.createElement('img');
     img.src = (sign === 'X' ? './svg/x.svg' : './svg/o.svg');
     img.classList.add('cell-sign');
+    img.dataset.sign = `${sign}`;
 
     return img;
 
@@ -681,7 +893,7 @@ const gameDisplay = (() => {
 
     const currentPlayer = document.getElementById(`player-profile-${current.getSign().toLowerCase()}`);
     const waitingPlayer = document.getElementById(`player-profile-${waiting.getSign().toLowerCase()}`);
-    console.log(current.isTurn);
+    // console.log(current.isTurn);
 
     currentPlayer.firstElementChild.style.animation = 'small-float 2s ease-in-out infinite';
     currentPlayer.style.boxShadow = '0px 0px 20px #333333';
@@ -764,6 +976,32 @@ const gameDisplay = (() => {
 
   };
 
+  const highlightWin = (winner) => {
+
+    const winnerSign = winner.getSign();
+    console.log(winnerSign);
+    const winnerCells = Array.from(document.querySelectorAll(`[data-sign="${winnerSign}"]`));
+    console.log(winnerCells);
+    // console.log(document.querySelectorAll('[src="./svg/x.svg"]'));
+
+    for (let i = 0; i < winnerCells.length; i += 1) {
+
+      winnerCells[i].parentElement.style.backgroundColor = '#A3D7A2';
+
+    }
+
+  };
+
+  const highlightTie = () => {
+
+    for (let i = 0; i < gridCells.length; i += 1) {
+
+      gridCells[i].style.backgroundColor = '#e8e2b0';
+
+    }
+
+  };
+
   const renderRound = (roundCount) => {
 
     const roundTitle = document.getElementById('round');
@@ -771,6 +1009,7 @@ const gameDisplay = (() => {
     gridCells.forEach((e) => {
 
       e.innerHTML = '';
+      e.style.backgroundColor = '';
 
     });
 
@@ -840,6 +1079,8 @@ const gameDisplay = (() => {
     renderSign,
     renderWins,
     renderPlayers,
+    highlightWin,
+    highlightTie,
     renderRound,
     unbind,
     renderWinModal,
