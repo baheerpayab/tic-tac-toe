@@ -701,7 +701,7 @@ const gameboard = (() => {
 
     }, 500);
 
-    const time = (playerX && playerO) !== 'user' ? 1000 : 0;
+    const time = (playerX && playerO) !== 'user' ? 650 : 0;
     setTimeout(() => {
 
       changeTurn();
@@ -843,6 +843,9 @@ const gameboard = (() => {
     playerO.isTurn = false;
     playerX.resetWins();
     playerO.resetWins();
+    playerX.resetMoves();
+    playerO.resetMoves();
+    state = false;
     gameDisplay.renderWins(playerX, playerO);
 
   };
