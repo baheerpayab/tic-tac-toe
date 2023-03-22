@@ -393,56 +393,64 @@ const aiPlayer = (() => {
 
     }
 
-    if (((gameArray[0] && gameArray[7]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[0] && gameArray[7]) === enemySign) && ai.getMoves() === 1
+    && gameArray[6] === null) {
 
       console.log('first');
       return 6;
 
     }
 
-    if (((gameArray[2] && gameArray[7]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[2] && gameArray[7]) === enemySign) && ai.getMoves() === 1
+    && gameArray[8] === null) {
 
       console.log('second');
       return 8;
 
     }
 
-    if (((gameArray[0] && gameArray[5]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[0] && gameArray[5]) === enemySign) && ai.getMoves() === 1
+    && gameArray[2] === null) {
 
       console.log('third');
       return 2;
 
     }
 
-    if (((gameArray[6] && gameArray[5]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[6] && gameArray[5]) === enemySign) && ai.getMoves() === 1
+    && gameArray[8] === null) {
 
       console.log('fourth');
       return 8;
 
     }
 
-    if (((gameArray[6] && gameArray[1]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[6] && gameArray[1]) === enemySign) && ai.getMoves() === 1
+    && gameArray[0] === null) {
 
       console.log('fifth');
       return 0;
 
     }
 
-    if (((gameArray[8] && gameArray[1]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[8] && gameArray[1]) === enemySign) && ai.getMoves() === 1
+    && gameArray[2] === null) {
 
       console.log('sixth');
       return 2;
 
     }
 
-    if (((gameArray[8] && gameArray[3]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[8] && gameArray[3]) === enemySign) && ai.getMoves() === 1
+    && gameArray[6] === null) {
 
       console.log('seventh');
       return 6;
 
     }
 
-    if (((gameArray[2] && gameArray[4]) === enemySign) && ai.getMoves() === 1) {
+    if (((gameArray[2] && gameArray[4]) === enemySign) && ai.getMoves() === 1
+    && gameArray[0] === null) {
 
       console.log('eigth');
       return 0;
@@ -589,7 +597,7 @@ const gameboard = (() => {
 
   const isCurrentPlayerAi = (pause) => {
 
-    if (currentPlayer().getName() === 'user') {
+    if (currentPlayer().getName() === 'user' && pause === false) {
 
       console.log('is not AI');
       gameDisplay.bind();
@@ -793,6 +801,8 @@ const gameboard = (() => {
   };
 
   const endRound = (winner) => {
+
+    gameDisplay.unbind();
 
     if (updateWins(winner) === 3) {
 
