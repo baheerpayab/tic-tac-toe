@@ -172,7 +172,7 @@ const Player = (playerName, playerSign, turn) => {
 
     movesMade = 0;
 
-  }
+  };
 
   const getSign = () => playerSign;
 
@@ -742,23 +742,6 @@ const gameboard = (() => {
 
     const Owin = currentCombos.map((e) => e.every(isO));
 
-    // const winningCombo = currentCombos.filter((e) => ((e[0] === e[1]) && (e[1] === e[2])));
-
-    // const winningComboIndex = function indexOfArray(val, array) {
-
-    //   const hash = {};
-    //   for (let i = 0; i < array.length; i += 1) {
-
-    //     hash[array[i]] = i;
-
-    //   }
-    //   return (hash.hasOwnProperty(val)) ? hash[val] : -1;
-
-    // };
-
-    // console.log(winningComboIndex(winningCombo, currentCombos));
-
-    // const winningComboCells = winPatterns[winningComboIndex(winningCombo, currentCombos)];
 
     const checkForWinner = () => {
 
@@ -1032,7 +1015,6 @@ const gameDisplay = (() => {
 
     const overlay = document.getElementById('overlay');
     const returnBtn = document.getElementById('return-btn');
-    const winModal = document.getElementById('win-modal');
     const winnerProfile = document.getElementById('winner-profile');
 
     winnerProfile.style.backgroundColor = `var(--${winner.getName()})`;
@@ -1101,31 +1083,3 @@ const gameDisplay = (() => {
   };
 
 })();
-
-
-/* function switchOption(option) {
-  const playerSelectBtn = option.currentTarget;
-  const playerIcon = playerSelectBtn.firstChild;
-  const playerName =
-  if (playerSelectBtn.classList.contains('user')) {
-    playerIcon.src = './svg/easy.svg';
-    playerSelectBtn.classList.remove('user');
-    playerSelectBtn.classList.add('easy');
-  } else if (playerSelectBtn.classList.contains('easy')) {
-    playerIcon.src = './svg/medium.svg';
-    playerSelectBtn.classList.remove('easy');
-    playerSelectBtn.classList.add('medium');
-  } else if (playerSelectBtn.classList.contains('medium')) {
-    playerIcon.src = './svg/hard.svg';
-    playerSelectBtn.classList.remove('medium');
-    playerSelectBtn.classList.add('hard');
-  } else if (playerSelectBtn.classList.contains('hard')) {
-    playerIcon.src = './svg/impossible.svg';
-    playerSelectBtn.classList.remove('hard');
-    playerSelectBtn.classList.add('impossible');
-  } else if (playerSelectBtn.classList.contains('impossible')) {
-    playerIcon.src = './svg/user.svg';
-    playerSelectBtn.classList.remove('impossible');
-    playerSelectBtn.classList.add('user');
-  }
-} */
