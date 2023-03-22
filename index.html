@@ -41,12 +41,12 @@
     <div id="gamescreen" class="gamescreen hidden">
       <h1 id="round" class="round">ROUND 1</h1>
       <div class="gameboard">
-        <div class="player-bar">
+        <div id="player-bar-x" class="player-bar">
           <div id="player-profile-x" class="player-profile">
             <img src="./svg/user.svg"/>
           </div>
           <p id="player-x-name-sm" class="player-name-sm">USER</p>
-          <img class="token-sm" src="./svg/x.svg" />
+          <img id="token-sm-x"class="token-sm" src="./svg/x.svg" />
           <div id="x-wins" class="win-counter">0</div>
         </div>
         <div id="grid" class="grid">
@@ -60,12 +60,12 @@
           <div class="grid-cell" data-cell="7"></div>
           <div class="grid-cell br" data-cell="8"></div>
         </div>
-        <div class="player-bar">
+        <div id="player-bar-o" class="player-bar">
           <div id="player-profile-o" class="player-profile">
             <img src="./svg/easy.svg"/>
           </div>
           <p id="player-o-name-sm" class="player-name-sm">AI-EASY</p>
-          <img class="token-sm" src="./svg/o.svg" />
+          <img id="token-sm-o" class="token-sm" src="./svg/o.svg" />
           <div id="o-wins" class="win-counter">0</div>
         </div>
       </div>
@@ -73,7 +73,7 @@
   </main>
   <div id="overlay" class="overlay hidden">
     <div id="win-modal" class="win-modal">
-      <div id="winner-profile" class="player-profile"><img/></div>
+      <div id="winner-profile" class="player-profile"><img id="winner-icon"/></div>
       <h3 id="winner-txt" class="winner-txt"></h3>
       <button id="return-btn" class="return-btn">RETURN</button>
     </div>
