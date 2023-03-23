@@ -207,8 +207,6 @@ const aiPlayer = (() => {
 
     const mySign = ai.getSign();
     const enemySign = mySign === 'X' ? 'O' : 'X';
-    // console.log(enemySign);
-    // console.log(ai.getMoves());
 
     const winPatterns = [
       [0, 1, 2],
@@ -247,7 +245,6 @@ const aiPlayer = (() => {
         if (array.length !== 0) {
 
           const newArray = array[0];
-          // console.log(newArray);
           return newArray.indexOf(null);
 
         }
@@ -259,9 +256,7 @@ const aiPlayer = (() => {
       const blockWin = () => {
 
         const blockWinPattern = blockWinComboIndex(blockWinCombo, currentCombos);
-        // console.log(blockWinPattern);
         const missingBlockMove = missingBlockMoveIndex(blockWinCombo);
-        // console.log(missingBlockMove);
 
         if (missingBlockMove !== false && blockWinPattern !== -1) {
 
@@ -301,7 +296,6 @@ const aiPlayer = (() => {
         if (array.length !== 0) {
 
           const newArray = array[0];
-          // console.log(newArray);
           return newArray.indexOf(null);
 
         }
@@ -313,10 +307,7 @@ const aiPlayer = (() => {
       const getWin = () => {
 
         const getWinPattern = winComboIndex(winCombo, currentCombos);
-        // console.log(winCombo);
-        // console.log(getWinPattern);
         const missingWinMove = missingWinMoveIndex(winCombo);
-        // console.log(missingWinMove);
 
         if (missingWinMove !== false && getWinPattern !== -1) {
 
@@ -334,21 +325,18 @@ const aiPlayer = (() => {
 
     if ((getBlockMove() !== false) && (getWinMove() !== false)) {
 
-      console.log('winning');
       return getWinMove();
 
     }
 
     if (getBlockMove() !== false) {
 
-      console.log('blocking');
       return getBlockMove();
 
     }
 
     if (getWinMove() !== false) {
 
-      console.log('winning');
       return getWinMove();
 
     }
@@ -358,7 +346,6 @@ const aiPlayer = (() => {
     && (gameArray[6] === null) && (gameArray[8] === null))
     && (ai.getMoves() === 0)) {
 
-      console.log('cornering to win');
       const corners = [0, 2, 6, 8];
       return corners[Math.floor(Math.random() * corners.length)];
 
@@ -368,7 +355,6 @@ const aiPlayer = (() => {
     && ((gameArray[0] && gameArray[2] && gameArray[6] && gameArray[8]) === null)
     && ai.getMoves() === 0) {
 
-      console.log('cornering');
       const corners = [0, 2, 6, 8];
       const move = corners[Math.floor(Math.random() * corners.length)];
 
@@ -378,7 +364,6 @@ const aiPlayer = (() => {
 
       }
 
-      console.log('trying again');
       findBestMove(ai, gameArray);
 
     }
@@ -387,7 +372,6 @@ const aiPlayer = (() => {
       || gameArray[5] || gameArray[7]) === null)
       && ai.getMoves === 0) {
 
-      console.log('cornering two');
       const corners = [0, 2, 6, 8];
       return corners[Math.floor(Math.random() * corners.length)];
 
@@ -396,7 +380,6 @@ const aiPlayer = (() => {
     if (((gameArray[0] && gameArray[7]) === enemySign) && ai.getMoves() === 1
     && gameArray[6] === null) {
 
-      console.log('first');
       return 6;
 
     }
@@ -404,7 +387,6 @@ const aiPlayer = (() => {
     if (((gameArray[2] && gameArray[7]) === enemySign) && ai.getMoves() === 1
     && gameArray[8] === null) {
 
-      console.log('second');
       return 8;
 
     }
@@ -412,7 +394,6 @@ const aiPlayer = (() => {
     if (((gameArray[0] && gameArray[5]) === enemySign) && ai.getMoves() === 1
     && gameArray[2] === null) {
 
-      console.log('third');
       return 2;
 
     }
@@ -420,7 +401,6 @@ const aiPlayer = (() => {
     if (((gameArray[6] && gameArray[5]) === enemySign) && ai.getMoves() === 1
     && gameArray[8] === null) {
 
-      console.log('fourth');
       return 8;
 
     }
@@ -428,7 +408,6 @@ const aiPlayer = (() => {
     if (((gameArray[6] && gameArray[1]) === enemySign) && ai.getMoves() === 1
     && gameArray[0] === null) {
 
-      console.log('fifth');
       return 0;
 
     }
@@ -436,7 +415,6 @@ const aiPlayer = (() => {
     if (((gameArray[8] && gameArray[1]) === enemySign) && ai.getMoves() === 1
     && gameArray[2] === null) {
 
-      console.log('sixth');
       return 2;
 
     }
@@ -444,7 +422,6 @@ const aiPlayer = (() => {
     if (((gameArray[8] && gameArray[3]) === enemySign) && ai.getMoves() === 1
     && gameArray[6] === null) {
 
-      console.log('seventh');
       return 6;
 
     }
@@ -452,7 +429,6 @@ const aiPlayer = (() => {
     if (((gameArray[2] && gameArray[4]) === enemySign) && ai.getMoves() === 1
     && gameArray[0] === null) {
 
-      console.log('eigth');
       return 0;
 
     }
@@ -461,7 +437,6 @@ const aiPlayer = (() => {
       || gameArray[6] || gameArray[8]) === enemySign)
       && ai.getMoves() === 0) {
 
-      console.log('centering to block');
       return 4;
 
     }
@@ -470,7 +445,6 @@ const aiPlayer = (() => {
       || gameArray[6] || gameArray[8]) === mySign)
       && ai.getMoves() === 0) {
 
-      console.log('centering to win');
       return 4;
 
     }
@@ -479,14 +453,12 @@ const aiPlayer = (() => {
       || gameArray[5] || gameArray[7]) === enemySign)
       && ai.getMoves === 0) {
 
-      console.log('randoming');
       return getRandomMove();
 
     }
 
     if ((gameArray[4] === mySign) && ai.getMoves() < 2) {
 
-      console.log('middling');
       const middles = [1, 3, 5, 7];
       const move = middles[Math.floor(Math.random() * middles.length)];
 
@@ -496,14 +468,12 @@ const aiPlayer = (() => {
 
       }
 
-      console.log('trying again');
       findBestMove(ai, gameArray);
 
     }
 
     if (ai.getMoves() > 0) {
 
-      console.log('randoming');
       return getRandomMove(gameArray);
 
     }
@@ -599,12 +569,10 @@ const gameboard = (() => {
 
     if (currentPlayer().getName() === 'user' && pause === false) {
 
-      console.log('is not AI');
       gameDisplay.bind();
 
     } else if (pause === false) {
 
-      console.log('is AI');
       gameDisplay.unbind();
       makeAiMove();
 
@@ -630,7 +598,6 @@ const gameboard = (() => {
     const i = cell.dataset.cell;
 
     gameArray[i] = currentPlayer().getSign();
-    // console.log(playerX.isTurn);
     gameDisplay.renderSign(i, currentPlayer().getSign());
 
     changeTurn();
@@ -640,8 +607,6 @@ const gameboard = (() => {
   };
 
   const makeAiMove = () => {
-
-    console.log('ai move');
 
     const bestMove = aiPlayer.findBestMove(currentPlayer(), gameArray);
     const randomMove = aiPlayer.getRandomMove(gameArray);
@@ -820,7 +785,6 @@ const gameboard = (() => {
 
   const endGame = (winner) => {
 
-    console.log('game over');
     gameDisplay.unbind();
     gameDisplay.renderPlayerTurn(playerX, playerO).unrender();
     gameDisplay.renderWinModal(winner);
@@ -889,7 +853,6 @@ const gameDisplay = (() => {
 
     const currentPlayer = document.getElementById(`player-profile-${current.getSign().toLowerCase()}`);
     const waitingPlayer = document.getElementById(`player-profile-${waiting.getSign().toLowerCase()}`);
-    // console.log(current.isTurn);
 
     currentPlayer.firstElementChild.style.animation = 'small-float 2s ease-in-out infinite';
     currentPlayer.style.boxShadow = '0px 0px 20px #333333';
@@ -913,9 +876,6 @@ const gameDisplay = (() => {
 
   const renderSign = (i, sign) => {
 
-    // console.log(gridCells);
-    // console.log(i);
-    // console.log(gridCells[i]);
     gridCells[i].appendChild(signImg(sign));
 
   };
@@ -975,10 +935,7 @@ const gameDisplay = (() => {
   const highlightWin = (winner) => {
 
     const winnerSign = winner.getSign();
-    console.log(winnerSign);
     const winnerCells = Array.from(document.querySelectorAll(`[data-sign="${winnerSign}"]`));
-    console.log(winnerCells);
-    // console.log(document.querySelectorAll('[src="./svg/x.svg"]'));
 
     for (let i = 0; i < winnerCells.length; i += 1) {
 
